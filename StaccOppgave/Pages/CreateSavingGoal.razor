@@ -1,0 +1,27 @@
+﻿@page "/CreateSavingGoal"
+@layout MainLayout
+
+<h3>New Saving Goal</h3>
+
+<form>
+<div class="form-group">
+    <label for="title">Title</label>
+    <input type="text" id="title" class="form-control" @bind="title" />
+</div>
+<div class="form-group">
+    <label for="description">Description</label>
+    <textarea id="description" class="form-control" @bind="description"></textarea>
+</div>
+<div class="form-group">
+    <label for="price">Price</label>
+    <input type="number" id="price" class="form-control" @bind="price" />
+</div>
+<br />
+<button type="submit" class="btn btn-primary" >Submit</button>
+</form>
+@code {
+    string title;
+string description;
+decimal price;
+
+}
