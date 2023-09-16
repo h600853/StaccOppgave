@@ -10,7 +10,7 @@ namespace StaccOppgave.Models
         public int Userid { get; set; }
         [JsonPropertyName("accountNumber")]
         public string AccountNumber { get; set; }
-        [JsonPropertyName("accountNumber")]
+        [JsonPropertyName("balance")]
         public decimal Balance { get; set; }
         [JsonPropertyName("currency")]
         public string Currency { get; set; }

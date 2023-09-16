@@ -1,9 +1,11 @@
 ﻿@layout LoginLayout
 @page "/"
+@inject NavigationManager navigator
+
 
 <h3>Login</h3>
 
-<form>
+
     <div class="form-group">
         <label for="InputEmail">Email address</label>
         <input type="email" class="form-control" id="InputEmail" @bind="email">
@@ -16,13 +18,66 @@
     <div>
 <a href="/signup">Dont have an account? Sign Up!</a>
     </div>
-</form>
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div>
+        <p style="color: red;">@errorMessage</p>
+    </div>
+}
+
+
 
 @code {
     private string email;
     private string password;
-    private void login()
+    private string errorMessage;
+    private bool userExists;
+
+    private async Task login()
     {
-        
+
+        using (var client = new HttpClient())
+        {
+            try
+            {
+
+                var apiUrl = $"https://localhost:7064/User/GetUsers?email={Uri.EscapeDataString(email)}&password={Uri.EscapeDataString(password)}";
+
+
+                var response = await client.GetAsync(apiUrl);
+
+
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+
+
+                    userExists = !string.IsNullOrWhiteSpace(responseContent);
+
+                    if (userExists)
+                    {
+                        navigator.NavigateTo("home");
+
+                    }
+                    else
+                    {
+                        
+                        errorMessage = "User does not exist or invalid credentials.";
+                    }
+                }
+                else
+                {
+                    
+                    errorMessage = "Login failed. Please check your email and password.";
+                }
+            }
+            catch (Exception ex)
+            {
+                
+                errorMessage = "An error occurred: " + ex.Message;
+            }
+        }
     }
 }
+

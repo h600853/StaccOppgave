@@ -1,7 +1,7 @@
 ﻿@page "/CreateAccount"
 @layout MainLayout
 <h3>Create Account</h3>
-<form>
+
     <div class="form-group">
         <label for="AccountNumber">Account Number</label>
         <input type="accountnumber" class="form-control" id="AccountNumber" @bind="accountnumber">
@@ -12,7 +12,7 @@
     </div>
     <br />
     <button type="submit" class="btn btn-primary" >Create Account</button>
-</form>
+
 
 @code {
     string accountnumber;
