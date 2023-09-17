@@ -1,5 +1,6 @@
 ﻿@page "/signup"
 @layout LoginLayout
+@inject NavigationManager navigator
 
 <h3>Sign Up</h3>
 
@@ -21,7 +22,13 @@
             <label for="confirmPassword">Confirm Password</label>
             <input type="password" id="confirmPassword" class="form-control" @bind="confirmPassword" />
         </div>
+        <br />
         <button type="submit" class="btn btn-primary" @onclick="SignUp">Sign Up</button>
+        <br />
+    @if (!string.IsNullOrEmpty(errormessage))
+    {
+        <div class="alert alert-danger">@errormessage</div>
+    }
     
 </div>
 
@@ -30,11 +37,44 @@
     private string email;
     private string password;
     private string confirmPassword;
+    private string errormessage;
 
     private async Task SignUp()
     {
-        // Perform user registration here, e.g., make an API call to your backend
-        // to create a new user account.
-        // You should also add validation logic and error handling.
+        if (!password.Equals(confirmPassword))
+        {
+            errormessage = "Passwords do not match";
+            return;
+        }
+
+        try
+        {
+            var newUser = new
+            {
+                Username = username,
+                Email = email,
+                PasswordHash = password 
+            };
+
+            using (var client = new HttpClient())
+            {
+                var apiUrl = $"https://localhost:7064/User/CreateUser";
+                var response = await client.PostAsJsonAsync(apiUrl, newUser);
+
+
+                if (response.IsSuccessStatusCode)
+                {
+                    navigator.NavigateTo("/");
+                }
+                else
+                {
+                    errormessage = "Failed to create an account. Please try again later.";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            errormessage = "An error occurred: " + ex.Message;
+        }
     }
 }
