@@ -29,7 +29,7 @@ namespace WebApplication1.Controllers
             {
                 return NotFound(new { message = "Account was not found" });
             }
-            return Ok(new { message = "An account was found", accountdata = account });
+            return Ok(account);
         }
         [HttpPost("CreateAccount")]
         public IActionResult CreateAccount([FromBody] Account account)
@@ -51,22 +51,21 @@ namespace WebApplication1.Controllers
 
         }
         [HttpPut("UpdateBalance")]
-        public IActionResult updateAccountBalance(decimal balance, int userid)
+        public IActionResult updateAccountBalance([FromBody] Account account)
         {
-            if (balance <= 0)
-            {
-                return BadRequest(new { message = "Balance should be a positive value." });
-            }
-
-            Account? account = dx.Accounts.FirstOrDefault(x => x.UserId == userid);
 
             if (account == null)
             {
+                return BadRequest("Invalid JSON payload");
+            }
+            Account? accountToUpdate = dx.Accounts.FirstOrDefault(x => x.AccountNumber == account.AccountNumber);
+            if (accountToUpdate == null)
+            {
                 return NotFound(new { message = "Account was not found" });
             }
-            account.Balance += balance;
+            accountToUpdate.Balance = account.Balance;
             dx.SaveChanges();
-            return Ok(new { message = $"{balance} has been added to your account.", accountData = account });
+            return Ok(new { message = $"balance has been added to your account.", accountData = account });
         }
 
 

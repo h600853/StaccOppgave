@@ -1,5 +1,8 @@
 ﻿@page "/AddBalance"
 @layout MainLayout
+@inject NavigationManager navigator
+@inject UserService userService
+@using StaccOppgave.Models
 
 <h3>Add Balance</h3>
 
@@ -12,11 +15,81 @@
     <input class="form-control" type="number" id="amount" @bind="amount" />
     </div>
     <br />
-    <button type="submit" class="btn btn-primary"> Add Balance</button>
+    <button type="submit" class="btn btn-primary" @onclick="GetAccount"> Add Balance</button>
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
 
 @code {
     private string accountNumber;
     private decimal amount;
+    private string errorMessage;
+    private string userid;
+
+    private async Task GetAccount()
+    {
+        userid = userService.UserId.ToString();
+        if (string.IsNullOrEmpty(userid))
+        {
+            errorMessage = "You must be logged in to update balance";
+            return;
+        }
+        try {
+            using (var client = new HttpClient()) {
+
+                var response = await client.GetAsync($"https://localhost:7064/Account/GetAccountForUser?userId={Uri.EscapeDataString(userid)}");
+                if (response.IsSuccessStatusCode) {
+                    var account = await response.Content.ReadFromJsonAsync<Account>();
+                    Console.WriteLine(account.Balance);
+                    if (account != null && account.AccountNumber.Equals(accountNumber)) {
+                        account.Balance += amount;
+                        Console.WriteLine(account.Balance);
+                        await UpdateBalance(account);
+                    } else
+                    { 
+                       errorMessage = "Account number does not match";
+                    
+                    }
+                }
+                else {
+                    errorMessage = "Something went wrong";
+                }
+            }
+        }
+        catch (HttpRequestException ex) {
+            errorMessage = ex.Message;
+        }
+
+    }
+
+    private async Task UpdateBalance(Account account)
+    {
+        try
+        {
+            using (var client = new HttpClient())
+            {
+                var apiString = "https://localhost:7064/Account/UpdateBalance";
+
+                var response = await client.PutAsJsonAsync(apiString, account);
+                if (response.IsSuccessStatusCode)
+                {
+                    navigator.NavigateTo("/home");
+                }
+                else
+                {
+                    errorMessage = "Something went wrong";
+                }
+            
+            }
+
+        }catch(HttpRequestException ex)
+        {
+            errorMessage = ex.Message;
+        }
+
+    }
 
    
 }
