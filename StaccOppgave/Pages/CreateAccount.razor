@@ -1,5 +1,7 @@
 ﻿@page "/CreateAccount"
 @layout MainLayout
+@inject NavigationManager navigator
+@inject UserService userService
 <h3>Create Account</h3>
 
     <div class="form-group">
@@ -11,11 +13,55 @@
         <input type="currency" class="form-control" id="Currency" @bind="currency">
     </div>
     <br />
-    <button type="submit" class="btn btn-primary" >Create Account</button>
+    <button type="submit" class="btn btn-primary" @onclick="CreateAnAccount">Submit</button>
+@if (!string.IsNullOrEmpty(errormessage))
+{
+    <div class="alert alert-danger">@errormessage</div>
+}
 
 
 @code {
     string accountnumber;
     string currency;
+    string userid;
+    string errormessage;
 
+    private async Task CreateAnAccount()
+    {
+        userid = userService.UserId.ToString();
+        if (string.IsNullOrEmpty(userid))
+        {
+            errormessage = "You must be logged in to create an account";
+            return;
+        }
+        try
+        {
+            var newAccount = new
+            {
+                UserId = userService.UserId,
+                AccountNumber = accountnumber,
+                 Balance = 0,
+                Currency = currency
+        };
+
+            using (var client = new HttpClient())
+            {
+                var response = await client.PostAsJsonAsync("https://localhost:7064/Account/CreateAccount", newAccount);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    navigator.NavigateTo("/home");
+                }
+                else
+                {
+                    errormessage = "Something went wrong";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            errormessage = ex.Message;
+        }
+    
+    }
 }

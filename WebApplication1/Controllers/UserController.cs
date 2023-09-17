@@ -30,7 +30,7 @@ namespace WebApplication1.Controllers
             {
                 return NotFound(new { message = "User was not found" });
             }
-            return Ok(new { message = "A user was found", userdata = user });
+            return Ok(user);
 
 
 

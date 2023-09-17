@@ -1,7 +1,9 @@
 ﻿@layout LoginLayout
 @page "/"
 @inject NavigationManager navigator
-
+@inject UserService userService
+@using StaccOppgave.Models
+@using System.Text.Json
 
 <h3>Login</h3>
 
@@ -49,7 +51,13 @@
                 {
 
                     var responseContent = await response.Content.ReadAsStringAsync();
-
+                    User? user = JsonSerializer.Deserialize<User>(responseContent);
+                   
+                    if (user != null)
+                    {
+                        userService.SetUserId(user.Userid);
+                    }
+                  
 
                     userExists = !string.IsNullOrWhiteSpace(responseContent);
 
