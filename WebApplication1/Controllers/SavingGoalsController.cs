@@ -33,13 +33,13 @@ namespace WebApplication1.Controllers
             return Ok(new { message = "Saving goals were found", savingGoalsData = savingGoals });
         }
         [HttpPost("CreateSavingGoal")]
-        public IActionResult CreateSavingGoal(int userid, string title, string description, decimal price)
+        public IActionResult CreateSavingGoal([FromBody] SavingGoal savingGoal)
         {
             SavingGoal newSG = new SavingGoal();    
-            newSG.UserId = userid;
-            newSG.Title = title;
-            newSG.Description = description;
-            newSG.Price = price;
+            newSG.UserId = savingGoal.UserId;
+            newSG.Title = savingGoal.Title;
+            newSG.Description = savingGoal.Description;
+            newSG.Price = savingGoal.Price;
 
             savingGoals.Add(newSG);
             dx.SaveChanges();   

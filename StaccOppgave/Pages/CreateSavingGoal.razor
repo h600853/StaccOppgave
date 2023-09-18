@@ -1,5 +1,7 @@
 ﻿@page "/CreateSavingGoal"
 @layout MainLayout
+@inject NavigationManager navigator
+@inject UserService userService
 
 <h3>New Saving Goal</h3>
 
@@ -17,11 +19,62 @@
     <input type="number" id="price" class="form-control" @bind="price" />
 </div>
 <br />
-<button type="submit" class="btn btn-primary" >Submit</button>
+<button type="submit" class="btn btn-primary" @onclick="CreateNewSavingGoal" >Submit</button>
+@if (!string.IsNullOrEmpty(errormessage))
+{
+    <div class="alert alert-danger">@errormessage</div>
+}
 
 @code {
-    string title;
-string description;
-decimal price;
+
+    string? title;
+    string? description;
+    decimal price;
+    string? errormessage;
+
+    public async Task CreateNewSavingGoal()
+    {
+        if(string.IsNullOrEmpty(title) || string.IsNullOrEmpty(description))
+        {
+            errormessage = "Please fill in all fields";
+            return;
+        }
+        if(price < 0)
+        {
+            errormessage = "The price must be a positive number";
+            return;
+        }
+        try
+        {
+            var newSavingGoal = new
+            {
+                UserId = userService.UserId,
+                Title = title,
+                Description = description,
+                Price = price
+        };
+
+
+            using (var client = new HttpClient())
+            {
+                var apiUrl = $"https://localhost:7064/SavingGoals/CreateSavingGoal";
+                var response = await client.PostAsJsonAsync(apiUrl, newSavingGoal);
+
+
+                if (response.IsSuccessStatusCode)
+                {
+                    navigator.NavigateTo("/home");
+                }
+                else
+                {
+                    errormessage = "Failed to create a SavingGoal. Please try again later.";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            errormessage = "An error occurred: " + ex.Message;
+        }
+    }
 
 }
