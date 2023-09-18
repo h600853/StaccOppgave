@@ -2,6 +2,11 @@
 @layout MainLayout
 @inject NavigationManager navigator
 @inject UserService userService
+@using StaccOppgave.Models
+
+@if(account == null)
+{
+    
 <h3>Create Account</h3>
 
     <div class="form-group">
@@ -17,6 +22,10 @@
 @if (!string.IsNullOrEmpty(errormessage))
 {
     <div class="alert alert-danger">@errormessage</div>
+    }
+} else
+{
+    <h3>You already have an account.</h3>
 }
 
 
@@ -25,6 +34,12 @@
     string currency;
     string userid;
     string errormessage;
+    Account? account;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAccount();
+    }
 
     private async Task CreateAnAccount()
     {
@@ -62,6 +77,37 @@
         {
             errormessage = ex.Message;
         }
+
     
+    }
+    private async Task GetAccount()
+    {
+        userid = userService.UserId.ToString();
+
+        if (string.IsNullOrEmpty(userid))
+        {
+            errormessage = "You must be logged in to create an account";
+            return;
+        }
+
+        try
+        {
+            using (var client = new HttpClient())
+            {
+
+                var response = await client.GetAsync($"https://localhost:7064/Account/GetAccountForUser?userId={Uri.EscapeDataString(userid.ToString())}");
+                if (response.IsSuccessStatusCode)
+                {
+                    account = await response.Content.ReadFromJsonAsync<Account>();
+
+                }
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            errormessage = ex.Message;
+        }
+
+
     }
 }
