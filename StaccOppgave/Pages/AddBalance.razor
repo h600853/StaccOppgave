@@ -42,10 +42,10 @@
                 var response = await client.GetAsync($"https://localhost:7064/Account/GetAccountForUser?userId={Uri.EscapeDataString(userid)}");
                 if (response.IsSuccessStatusCode) {
                     var account = await response.Content.ReadFromJsonAsync<Account>();
-                    Console.WriteLine(account.Balance);
+                   
                     if (account != null && account.AccountNumber.Equals(accountNumber)) {
                         account.Balance += amount;
-                        Console.WriteLine(account.Balance);
+                        
                         await UpdateBalance(account);
                     } else
                     { 

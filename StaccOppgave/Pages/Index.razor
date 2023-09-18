@@ -1,11 +1,70 @@
 ﻿@page "/home"
 @layout MainLayout
+@inject UserService userService
+@using StaccOppgave.Models
 
+@if (@account == null)
+{
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="alert alert-danger">@errorMessage</div>
+    }
 
+} else
+{
 <div class="container mt-1">
-        <h3>Welcome back, User!</h3>
-        <p>Account number: <strong>12345678</strong></p>
+        <h3>Welcome back, @userService.UserName !</h3>
+        <p>Account number: <strong>@account.AccountNumber</strong></p>
         <p>Your account balance is:</p>
-        <h1>500.00 NOK</h1>
+        <h1>@account.Balance  @account.Currency</h1>
 </div>
+}
 
+@code {
+    int accountNumber;
+    string? userid;
+    string? errorMessage;
+    Account? account;
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAccount();
+    }
+
+    private async Task GetAccount()
+    {
+        userid = userService.UserId.ToString();
+        if (string.IsNullOrEmpty(userid))
+        {
+            errorMessage = "You must be logged in";
+            return;
+        }
+        try
+        {
+            using (var client = new HttpClient())
+            {
+
+                var response = await client.GetAsync($"https://localhost:7064/Account/GetAccountForUser?userId={Uri.EscapeDataString(userid)}");
+                if (response.IsSuccessStatusCode)
+                {
+                     account = await response.Content.ReadFromJsonAsync<Account>();
+                  
+                }
+                else
+                {
+                    errorMessage = "Account was not found";
+                }
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            errorMessage = ex.Message;
+        }
+
+    }
+
+
+
+
+
+
+}
