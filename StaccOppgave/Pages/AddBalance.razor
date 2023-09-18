@@ -43,7 +43,7 @@
                 if (response.IsSuccessStatusCode) {
                     var account = await response.Content.ReadFromJsonAsync<Account>();
                    
-                    if (account != null && account.AccountNumber.Equals(accountNumber)) {
+                    if (account != null && account.AccountNumber.Equals(accountNumber, StringComparison.OrdinalIgnoreCase)) {
                         account.Balance += amount;
                         
                         await UpdateBalance(account);

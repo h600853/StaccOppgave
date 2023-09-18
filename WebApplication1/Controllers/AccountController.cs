@@ -58,7 +58,7 @@ namespace WebApplication1.Controllers
             {
                 return BadRequest("Invalid JSON payload");
             }
-            Account? accountToUpdate = dx.Accounts.FirstOrDefault(x => x.AccountNumber == account.AccountNumber);
+            Account? accountToUpdate = dx.Accounts.FirstOrDefault(x => x.UserId == account.UserId && x.AccountNumber == account.AccountNumber);
             if (accountToUpdate == null)
             {
                 return NotFound(new { message = "Account was not found" });
