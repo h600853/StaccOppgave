@@ -30,7 +30,7 @@ namespace WebApplication1.Controllers
                 return NotFound(new { message = "No saving goals were found for the user" });
             }
 
-            return Ok(new { message = "Saving goals were found", savingGoalsData = savingGoals });
+            return Ok(savingGoals);
         }
         [HttpPost("CreateSavingGoal")]
         public IActionResult CreateSavingGoal([FromBody] SavingGoal savingGoal)

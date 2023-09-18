@@ -63,3 +63,16 @@ a, .btn-link {
         content: "An error has occurred."
     }
 
+.saving-goals-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    white-space: nowrap; /* Prevent wrapping to the next line */
+}
+
+.saving-goal {
+ 
+    border: 2px solid #ddd;
+    padding: 10px;
+    margin-right: 10px; /* Add space between saving goals */
+    display: inline-block; /* Display saving goals horizontally */
+}

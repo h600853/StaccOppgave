@@ -1,7 +1,11 @@
 ﻿@page "/home"
 @layout MainLayout
 @inject UserService userService
+@inject NavigationManager navigator
 @using StaccOppgave.Models
+@using System.Text.Json
+
+
 
 @if (@account == null)
 {
@@ -12,11 +16,30 @@
 
 } else
 {
-<div class="container mt-1">
+<div >
         <h3>Welcome back, @userService.UserName !</h3>
         <p>Account number: <strong>@account.AccountNumber</strong></p>
         <p>Your account balance is:</p>
         <h1>@account.Balance  @account.Currency</h1>
+</div>
+<br />
+    <div>
+            @if (savingGoals != null)
+        {
+    <h3> Saving goals: </h3>
+            
+            @foreach (var savingGoal in savingGoals)
+            {
+                <div class="saving-goal">
+                    <h4> @savingGoal.Title </h4>
+                    <p> @savingGoal.Description</p>
+                    <p> <strong>@account.Balance @account.Currency </strong> out of <strong>@savingGoal.Price @account.Currency</strong> </p>
+                    <button type="submit" class="btn btn-danger" @onclick="() => DeleteSavingGoal(savingGoal.SavingGoalId)">Delete</button>
+
+                </div>
+            }
+
+    }
 </div>
 }
 
@@ -25,8 +48,10 @@
     string? userid;
     string? errorMessage;
     Account? account;
+    List<SavingGoal>? savingGoals;  
     protected override async Task OnInitializedAsync()
     {
+        await GetSavingGoals();
         await GetAccount();
     }
 
@@ -46,8 +71,8 @@
                 var response = await client.GetAsync($"https://localhost:7064/Account/GetAccountForUser?userId={Uri.EscapeDataString(userid)}");
                 if (response.IsSuccessStatusCode)
                 {
-                     account = await response.Content.ReadFromJsonAsync<Account>();
-                  
+                    account = await response.Content.ReadFromJsonAsync<Account>();
+
                 }
                 else
                 {
@@ -61,7 +86,84 @@
         }
 
     }
+    private async Task GetSavingGoals()
+    {
+        userid = userService.UserId.ToString();
+        if (string.IsNullOrEmpty(userid))
+        {
+            errorMessage = "You must be logged in";
+            return;
+        }
+        using (var client = new HttpClient())
+        {
+            try
+            {
 
+                var apiUrl = $"https://localhost:7064/SavingGoals/GetSavingGoalsForUser?userId={Uri.EscapeDataString(userid)}";
+
+                var response = await client.GetAsync(apiUrl);
+
+
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    savingGoals = JsonSerializer.Deserialize<List<SavingGoal>>(responseContent);
+
+
+
+
+                }
+                else
+                {
+                    savingGoals = null;
+                    errorMessage = "No saving goals found";
+                }
+            }
+            catch (Exception ex)
+            {
+
+                errorMessage = "An error occurred: " + ex.Message;
+            }
+        }
+    }
+    private async Task DeleteSavingGoal(int goalid)
+    {
+        userid = userService.UserId.ToString();
+        if (string.IsNullOrEmpty(userid))
+        {
+            errorMessage = "You must be logged";
+            return;
+        }
+        using (var client = new HttpClient())
+        {
+            try
+            {
+
+                var apiUrl = $"https://localhost:7064/SavingGoals/DeleteGoal?goalId={Uri.EscapeDataString(goalid.ToString())}";
+
+                var response = await client.DeleteAsync(apiUrl);
+
+
+                if (response.IsSuccessStatusCode)
+                {
+                    await GetSavingGoals();
+
+                }
+                else
+                {
+
+                    errorMessage = "Could not delete the saving goal";
+                }
+            }
+            catch (Exception ex)
+            {
+
+                errorMessage = "An error occurred: " + ex.Message;
+            }
+        }
+        
+    }
 
 
 
