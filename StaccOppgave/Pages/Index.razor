@@ -34,7 +34,7 @@
                     <h4> @savingGoal.Title </h4>
                     <p> @savingGoal.Description</p>
                     <p> <strong>@account.Balance @account.Currency </strong> out of <strong>@savingGoal.Price @account.Currency</strong> </p>
-                    <p>@(account.Balance / savingGoal.Price * 100) %</p>
+                    <p>@Math.Round(account.Balance / savingGoal.Price * 100) %</p>
                     <button type="submit" class="btn btn-danger" @onclick="() => DeleteSavingGoal(savingGoal.SavingGoalId)">Delete</button>
 
                 </div>

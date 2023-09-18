@@ -30,10 +30,10 @@
 
 
 @code {
-    string accountnumber;
-    string currency;
-    string userid;
-    string errormessage;
+    string? accountnumber;
+    string? currency;
+    string? userid;
+    string? errormessage;
     Account? account;
 
     protected override async Task OnInitializedAsync()
@@ -47,6 +47,11 @@
         if (string.IsNullOrEmpty(userid))
         {
             errormessage = "You must be logged in to create an account";
+            return;
+        }
+        if (string.IsNullOrEmpty(accountnumber) || string.IsNullOrEmpty(currency))
+        {
+            errormessage = "You must fill all the fields";
             return;
         }
         try
