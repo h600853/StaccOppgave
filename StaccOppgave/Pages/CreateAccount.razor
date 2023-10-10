@@ -6,19 +6,20 @@
 
 @if(account == null)
 {
-    
+  <div class="form-box">
 <h3>Create Account</h3>
 
     <div class="form-group">
         <label for="AccountNumber">Account Number</label>
-        <input type="accountnumber" class="form-control" id="AccountNumber" @bind="accountnumber">
+            <input type="accountnumber" class="form-control myinputfieldcss" id="AccountNumber" @bind="accountnumber">
     </div>
     <div class="form-group">
         <label for="Currency">Currency</label>
-        <input type="currency" class="form-control" id="Currency" @bind="currency">
+            <input type="currency" class="form-control myinputfieldcss" id="Currency" @bind="currency">
     </div>
-    <br />
-    <button type="submit" class="btn btn-primary" @onclick="CreateAnAccount">Submit</button>
+    
+    <button type="submit" class="btn btn-primary mybuttoncss" @onclick="CreateAnAccount">Submit</button>
+    </div>
 @if (!string.IsNullOrEmpty(errormessage))
 {
     <div class="alert alert-danger">@errormessage</div>

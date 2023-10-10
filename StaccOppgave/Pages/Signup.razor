@@ -2,35 +2,35 @@
 @layout LoginLayout
 @inject NavigationManager navigator
 
-<h3>Sign Up</h3>
 
-<div class="form-container">
+<div class="form-box">
+<h3>Sign Up</h3>
     
         <div class="form-group">
             <label for="username">Username</label>
-            <input type="text" id="username" class="form-control" @bind="username" />
+        <input type="text" id="username" class="form-control myinputfieldcss" @bind="username" />
         </div>
         <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" class="form-control" @bind="email" />
+        <input type="email" id="email" class="form-control myinputfieldcss" @bind="email" />
         </div>
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" id="password" class="form-control" @bind="password" />
+        <input type="password" id="password" class="form-control myinputfieldcss" @bind="password" />
         </div>
         <div class="form-group">
             <label for="confirmPassword">Confirm Password</label>
-            <input type="password" id="confirmPassword" class="form-control" @bind="confirmPassword" />
+        <input type="password" id="confirmPassword" class="form-control myinputfieldcss" @bind="confirmPassword" />
         </div>
-        <br />
-        <button type="submit" class="btn btn-primary" @onclick="SignUp">Sign Up</button>
-        <br />
+
+    <button type="submit" class="btn btn-primary mybuttoncss" @onclick="SignUp">Sign Up</button>
+</div> 
+        
     @if (!string.IsNullOrEmpty(errormessage))
     {
         <div class="alert alert-danger">@errormessage</div>
     }
     
-</div>
 
 @code {
     private string? username;
@@ -41,16 +41,21 @@
 
     private async Task SignUp()
     {
-        if(string.IsNullOrEmpty(username)) 
+        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(confirmPassword))
+        {
+            errormessage = "Please fill in all fields";
+            return;
+        }
+        else if(string.IsNullOrEmpty(username)) 
         {
             errormessage = "Invalid username";
         }
-        if (!password.Equals(confirmPassword))
+      else if (!password.Equals(confirmPassword))
         {
             errormessage = "Passwords do not match";
             return;
         }
-        if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
+       else if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
         {
             errormessage = "Please enter a valid email address.";
             return;

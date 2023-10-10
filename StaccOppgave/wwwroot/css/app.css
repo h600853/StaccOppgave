@@ -76,3 +76,23 @@ a, .btn-link {
     margin-right: 10px; /* Add space between saving goals */
     display: inline-block; /* Display saving goals horizontally */
 }
+.saving-cards {
+    margin-right: 20px; /* Add space between saving goals */
+    display: inline-block; /* Display saving goals horizontally */
+}
+.form-box {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    
+}
+.mybuttoncss {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.myinputfieldcss {
+margin-top: 10px;
+    margin-bottom: 10px;
+}
+}
+

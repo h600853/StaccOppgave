@@ -5,20 +5,21 @@
 @using StaccOppgave.Models
 @using System.Text.Json
 
+<div class="form-box">
 <h3>Login</h3>
-
-
     <div class="form-group">
         <label for="InputEmail">Email address</label>
-        <input type="email" class="form-control" id="InputEmail" @bind="email">
+        <input type="email" class="form-control myinputfieldcss" id="InputEmail" @bind="email">
+
     </div>
     <div class="form-group">
         <label for="InputPassword">Password</label>
-        <input type="password" class="form-control" id="InputPassword" @bind="password">
+        <input type="password" class="form-control myinputfieldcss" id="InputPassword" @bind="password">
     </div>
-    <button type="submit" class="btn btn-primary" @onclick="login">Login</button>
+    <button type="submit" class="btn btn-primary mybuttoncss " @onclick="login">Login</button>
     <div>
 <a href="/signup">Dont have an account? Sign Up!</a>
+    </div>
     </div>
 @if (!string.IsNullOrWhiteSpace(errorMessage))
 {

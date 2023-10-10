@@ -3,23 +3,23 @@
 @inject NavigationManager navigator
 @inject UserService userService
 
-<h3>New Saving Goal</h3>
-
-
+<div class="form-box">
+<h3> Create a new saving goal </h3>
 <div class="form-group">
     <label for="title">Title</label>
-    <input type="text" id="title" class="form-control" @bind="title" />
+        <input type="text" id="title" class="form-control myinputfieldcss" @bind="title" />
 </div>
 <div class="form-group">
     <label for="description">Description</label>
-    <textarea id="description" class="form-control" @bind="description"></textarea>
+        <textarea id="description" class="form-control myinputfieldcss" @bind="description"></textarea>
 </div>
 <div class="form-group">
     <label for="price">Price</label>
-    <input type="number" id="price" class="form-control" @bind="price" />
+        <input type="number" id="price" class="form-control myinputfieldcss" @bind="price" />
 </div>
-<br />
-<button type="submit" class="btn btn-primary" @onclick="CreateNewSavingGoal" >Submit</button>
+
+<button type="submit" class="btn btn-primary mybuttoncss" @onclick="CreateNewSavingGoal" >Submit</button>
+</div>
 @if (!string.IsNullOrEmpty(errormessage))
 {
     <div class="alert alert-danger">@errormessage</div>

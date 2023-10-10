@@ -4,6 +4,7 @@
 @inject NavigationManager navigator
 @using StaccOppgave.Models
 @using System.Text.Json
+@using BlazorBootstrap
 
 
 
@@ -28,16 +29,22 @@
         {
     <h3> Saving goals: </h3>
             
-            @foreach (var savingGoal in savingGoals)
+            @foreach (SavingGoal savingGoal in savingGoals)
             {
-                <div class="saving-goal">
-                    <h4> @savingGoal.Title </h4>
-                    <p> @savingGoal.Description</p>
-                    <p> <strong>@account.Balance @account.Currency </strong> out of <strong>@savingGoal.Price @account.Currency</strong> </p>
-                    <p>@Math.Round(account.Balance / savingGoal.Price * 100) %</p>
-                    <button type="submit" class="btn btn-danger" @onclick="() => DeleteSavingGoal(savingGoal.SavingGoalId)">Delete</button>
 
-                </div>
+                <Card TextAlignment="Alignment.Center" Color="CardColor.Light" Class="mb-4 saving-cards" Style="width:18rem;">
+                    <CardHeader> @savingGoal.Title </CardHeader>
+                    <CardBody>
+        
+                        <CardText> @savingGoal.Description </CardText>
+                        <CardText><strong>@account.Balance @account.Currency </strong> / <strong>@savingGoal.Price @account.Currency</strong></CardText>
+                        <Progress Class="mb-3">
+                            <ProgressBar Width="@CalculateWidth(savingGoal)" Label="@SetLabel(savingGoal)"
+                             Type="ProgressType.StripedAndAnimated" Color="ProgressColor.Danger"></ProgressBar>
+                        </Progress>
+                        <button type="submit" class="btn btn-danger" @onclick="() => DeleteSavingGoal(savingGoal.SavingGoalId)">Delete</button>
+                    </CardBody>
+                </Card>
             }
 
     }
@@ -49,7 +56,9 @@
     string? userid;
     string? errorMessage;
     Account? account;
-    List<SavingGoal>? savingGoals;  
+    List<SavingGoal>? savingGoals;
+   
+
     protected override async Task OnInitializedAsync()
     {
         await GetSavingGoals();
@@ -163,9 +172,20 @@
                 errorMessage = "An error occurred: " + ex.Message;
             }
         }
-        
+
     }
 
+    private double CalculateWidth(SavingGoal savingGoal)
+    {
+        decimal percentage = Math.Round(account.Balance / savingGoal.Price * 100);
+        double width = (percentage >= 100) ? 100 : (double)percentage;
+        return width;
+    }
+    private string SetLabel(SavingGoal savingGoal) 
+    {
+        decimal percentage = Math.Round(account.Balance / savingGoal.Price * 100);
+        return percentage + "%";
+    }
 
 
 

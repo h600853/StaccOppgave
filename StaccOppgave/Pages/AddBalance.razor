@@ -4,18 +4,20 @@
 @inject UserService userService
 @using StaccOppgave.Models
 
+<div class="form-box">
+
 <h3>Add Balance</h3>
 
 <div class="form-group">
     <label for="accountNumber">Account Number:</label>
-    <input class="form-control" type="text" id="accountNumber" @bind="accountNumber" />
+        <input class="form-control myinputfieldcss" type="text" id="accountNumber" @bind="accountNumber" />
 </div>
 <div class="form-group">
     <label for="amount">Amount:</label>
-    <input class="form-control" type="number" id="amount" @bind="amount" />
+        <input class="form-control myinputfieldcss" type="number" id="amount" @bind="amount" />
     </div>
-    <br />
-    <button type="submit" class="btn btn-primary" @onclick="GetAccount"> Add Balance</button>
+    <button type="submit" class="btn btn-primary mybuttoncss" @onclick="GetAccount"> Add Balance</button>
+</div>
 @if (!string.IsNullOrWhiteSpace(errorMessage))
 {
     <div class="alert alert-danger">@errorMessage</div>
