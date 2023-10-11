@@ -55,6 +55,16 @@
             errormessage = "You must fill all the fields";
             return;
         }
+        if (accountnumber.Length < 3 || !int.TryParse(accountnumber, out int validint))
+        {
+            errormessage = "Invalid Account Number";
+            return;
+        }
+        if(!currency.All(char.IsLetter))
+        {
+            errormessage = "Invalid currency";
+            return;
+        }
         try
         {
             var newAccount = new

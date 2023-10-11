@@ -44,15 +44,15 @@
                 var response = await client.GetAsync($"https://localhost:7064/Account/GetAccountForUser?userId={Uri.EscapeDataString(userid)}");
                 if (response.IsSuccessStatusCode) {
                     var account = await response.Content.ReadFromJsonAsync<Account>();
-                   
+
                     if (account != null && account.AccountNumber.Equals(accountNumber, StringComparison.OrdinalIgnoreCase)) {
                         account.Balance += amount;
-                        
+
                         await UpdateBalance(account);
                     } else
                     { 
-                       errorMessage = "Account number does not match";
-                    
+                        errorMessage = "Account number does not match";
+
                     }
                 }
                 else {
@@ -68,6 +68,11 @@
 
     private async Task UpdateBalance(Account account)
     {
+        if(amount <= 0)
+        {
+            errorMessage = "Invalid amount";
+            return;
+        }
         try
         {
             using (var client = new HttpClient())

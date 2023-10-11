@@ -46,16 +46,21 @@
             errormessage = "Please fill in all fields";
             return;
         }
-        else if(string.IsNullOrEmpty(username)) 
+        if(password.Length < 3)
+        {
+            errormessage = "Password must be at least 3 characters long";
+            return;
+        }
+          if(string.IsNullOrEmpty(username)) 
         {
             errormessage = "Invalid username";
         }
-      else if (!password.Equals(confirmPassword))
+       if (!password.Equals(confirmPassword))
         {
             errormessage = "Passwords do not match";
             return;
         }
-       else if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
+        if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
         {
             errormessage = "Please enter a valid email address.";
             return;
