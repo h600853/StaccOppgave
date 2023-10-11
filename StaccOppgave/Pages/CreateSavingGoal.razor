@@ -57,7 +57,7 @@
 
             using (var client = new HttpClient())
             {
-                var apiUrl = $"https://localhost:7064/SavingGoals/CreateSavingGoal";
+                var apiUrl = $"https://spareappapi.azurewebsites.net/SavingGoals/CreateSavingGoal";
                 var response = await client.PostAsJsonAsync(apiUrl, newSavingGoal);
 
 

@@ -44,7 +44,7 @@
             {
 
 
-                var apiUrl = $"https://localhost:7064/User/GetUsers?email={Uri.EscapeDataString(email)}&password={Uri.EscapeDataString(password)}";
+                var apiUrl = $"https://spareappapi.azurewebsites.net/User/GetUsers?email={Uri.EscapeDataString(email)}&password={Uri.EscapeDataString(password)}";
 
 
                 var response = await client.GetAsync(apiUrl);
@@ -106,7 +106,7 @@
                 using (var client = new HttpClient())
                 {
 
-                    var response = await client.GetAsync($"https://localhost:7064/Account/GetAccountForUser?userId={Uri.EscapeDataString(userid.ToString())}");
+                var response = await client.GetAsync($"https://spareappapi.azurewebsites.net/Account/GetAccountForUser?userId={Uri.EscapeDataString(userid.ToString())}");
                     if (response.IsSuccessStatusCode)
                     {
                          account = await response.Content.ReadFromJsonAsync<Account>();

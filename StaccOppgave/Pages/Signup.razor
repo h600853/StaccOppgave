@@ -77,7 +77,7 @@
 
             using (var client = new HttpClient())
             {
-                var apiUrl = $"https://localhost:7064/User/CreateUser";
+                var apiUrl = $"https://spareappapi.azurewebsites.net/User/CreateUser";
                 var response = await client.PostAsJsonAsync(apiUrl, newUser);
 
 

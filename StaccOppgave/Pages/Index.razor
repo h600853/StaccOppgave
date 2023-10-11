@@ -78,7 +78,7 @@
             using (var client = new HttpClient())
             {
 
-                var response = await client.GetAsync($"https://localhost:7064/Account/GetAccountForUser?userId={Uri.EscapeDataString(userid)}");
+                var response = await client.GetAsync($"https://spareappapi.azurewebsites.net/Account/GetAccountForUser?userId={Uri.EscapeDataString(userid)}");
                 if (response.IsSuccessStatusCode)
                 {
                     account = await response.Content.ReadFromJsonAsync<Account>();
@@ -109,7 +109,7 @@
             try
             {
 
-                var apiUrl = $"https://localhost:7064/SavingGoals/GetSavingGoalsForUser?userId={Uri.EscapeDataString(userid)}";
+                var apiUrl = $"https://spareappapi.azurewebsites.net/SavingGoals/GetSavingGoalsForUser?userId={Uri.EscapeDataString(userid)}";
 
                 var response = await client.GetAsync(apiUrl);
 
@@ -150,7 +150,7 @@
             try
             {
 
-                var apiUrl = $"https://localhost:7064/SavingGoals/DeleteGoal?goalId={Uri.EscapeDataString(goalid.ToString())}";
+                var apiUrl = $"https://spareappapi.azurewebsites.net/SavingGoals/DeleteGoal?goalId={Uri.EscapeDataString(goalid.ToString())}";
 
                 var response = await client.DeleteAsync(apiUrl);
 
